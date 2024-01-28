@@ -22,6 +22,20 @@
             overflow-y: scroll;
             border-right: 1px solid #ccc;
         }
+        @keyframes loadingAnimation {
+            0% {
+                color: black;
+            }
+            50% {
+                color: gray;
+            }
+            100% {
+                color: black;
+            }
+        }
+        #messages.loading p:last-child {
+            animation: loadingAnimation 1s infinite;
+        }
         #imageArea {
             flex: 1;
             text-align: center;
@@ -61,6 +75,7 @@
                 event.preventDefault();
                 let userInput = inputField.value;
                 messages.push(userInput);
+                document.getElementById('messages').classList.add('loading');
                 displayMessages();
                 
                 let requestData = {messages: messages};
@@ -73,6 +88,7 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    document.getElementById('messages').classList.remove('loading');
                     image.src = data.imageUrl;
                     prompt.innerText = data.rewrittenPrompt;
                 })
