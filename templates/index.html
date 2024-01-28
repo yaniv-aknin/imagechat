@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Chat</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            font-family: Arial, sans-serif;
+        }
+        #chat {
+            flex: 1;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        #messages {
+            min-width: 700px;
+            flex: 1;
+            overflow-y: scroll;
+            border-right: 1px solid #ccc;
+        }
+        #imageArea {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+        }
+        #image {
+            max-width: 100%;
+            max-height: 1024px;
+        }
+        input[type="text"] {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat">
+        <div id="messages"></div>
+        <input type="text" id="user_input" placeholder="Type your message...">
+    </div>
+    <div id="imageArea">
+        <img id="image" src="" alt="Generated Image"/>
+        <div id="prompt"></div>
+    </div>
+
+    <script>
+        const messages = [];
+        const inputField = document.getElementById("user_input");
+        const messagesContainer = document.getElementById("messages");
+        const image = document.getElementById("image");
+        const prompt = document.getElementById("prompt");
+        
+        inputField.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                let userInput = inputField.value;
+                messages.push(userInput);
+                displayMessages();
+                
+                let requestData = {messages: messages};
+                fetch("/api", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    image.src = data.imageUrl;
+                    prompt.innerText = data.rewrittenPrompt;
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+
+                inputField.value = ""; // Clear input field after sending
+            }
+        });
+
+        function displayMessages() {
+            messagesContainer.innerHTML = messages.map(msg => `<p>${msg}</p>`).join('');
+        }
+    </script>
+</body>
+</html>

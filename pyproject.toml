@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "imagechat"
+version = "0.1.0"
+description = ""
+authors = ["Yaniv Aknin <yaniv@aknin.name>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flask = "^3.0.1"
+openai = "^1.10.0"
+requests = "^2.31.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
