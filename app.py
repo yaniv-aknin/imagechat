@@ -2,8 +2,6 @@
 import time
 from flask import Flask, request, jsonify, render_template
 from openai import OpenAI
-import requests
-import os
 
 app = Flask(__name__)
 client = OpenAI()
@@ -14,6 +12,13 @@ def index():
 
 @app.route('/api', methods=['POST'])
 def process_messages():
+    messages = request.json['messages']
+    if messages[-1].startswith('#'):
+        time.sleep(5)
+        return jsonify({
+            "rewrittenPrompt": f"some text {int(time.time())}",
+            "imageUrl": f"https://fakeimg.pl/1024x1024?text={int(time.time())}",
+        })
     prompt = "\n".join(request.json['messages'])
     api_response = client.images.generate(
       model="dall-e-3",
