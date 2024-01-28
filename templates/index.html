@@ -90,7 +90,9 @@
                 .then(data => {
                     document.getElementById('messages').classList.remove('loading');
                     image.src = data.imageUrl;
-                    prompt.innerText = data.rewrittenPrompt;
+                    prompt.innerText = data.dallePrompt;
+                    // TODO: stream and display chat response
+                    console.log(data);
                 })
                 .catch((error) => {
                     console.error('Error:', error);
